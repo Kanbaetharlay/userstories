@@ -4,15 +4,14 @@ const app = express();
 //set port no
 const port = 8000;
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-//mysql connect
+//connect mysql
 const mysql = require('mysql');
 var db = mysql.createConnection({
     host : "localhost",
     user : 'root',
     password : '',
     database : "userstories",
-})
+});
 
 db.connect((err) => {
     if(err) {
