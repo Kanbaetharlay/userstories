@@ -38,8 +38,9 @@ module.exports = function(app, db) {
             let foundStudents = [];
             for (let i = 0; i<teachers.length; i++) {
                 try {
-                    let sql = "SELECT student FRO register WHERE teacher = '" + teachers[i] + "';";
-                    let query = await db.query(sql, (err, results) => {
+                    let sql = "SELECT student FROM register WHERE teacher = ?";
+                   
+                    let query = await db.query(sql, teachers[i], (err, results) => {
                         if(err) throw err;
                         results.forEach(student => {
                             foundStudents.push(student.student);
@@ -60,9 +61,8 @@ module.exports = function(app, db) {
     ==========================*/
     app.post('/api/suspend', (req, res) => {
         let student = req.body.student;
-        let sql = "UPDATE register SET suspend = 'S' WHERE student = '" + 
-        student + "'";
-        let query = db.query(sql, (err, results) => {
+        let sql = "UPDATE register SET suspend = 'S' WHERE student = ?";
+        let query = db.query(sql, student, (err, results) => {
             if(err) throw err;
             res.send({status: "Student suspended!"});
         })
@@ -76,8 +76,8 @@ module.exports = function(app, db) {
         let notification = req.body.notification;
         let split_notification = notification.split('@');
         var data = [];
-        let sql = "SELECT student FROM register WHERE teacher = '" + teacher+"' AND suspend = 'R';"
-        let query = db.query(sql, (err, results) => {
+        let sql = "SELECT student FROM register WHERE teacher = ? AND suspend = 'R';"
+        let query = db.query(sql, teacher, (err, results) => {
             if(err) throw err;
             results.forEach(student => {
                 data.push(student.student);
